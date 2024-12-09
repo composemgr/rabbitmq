@@ -1,0 +1,16 @@
+name: rabbitmq
+services:
+  db:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=${DB_ADMIN_NAME:-admin}
+      - RABBITMQ_DEFAULT_PASS=${DB_ADMIN_PASS:-admin}
+      - RABBITMQ_DEFAULT_VHOST=rabbitmq.${BASE_DOMAIN_NAME}
+    ports:
+      - '5672:5672'
+      - '172.17.0.1:59043:15672'
+    volumes:
+      - /var/lib/srv/${USER}/docker/library/rabbitmq/management/rootfs/data/db/rabbitmq:/var/lib/rabbitmq
