@@ -1,0 +1,29 @@
+name: rabbitmq
+services:
+  db:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: always
+    pull_policy: always
+    environment:
+      - NODE_IP_ADDRESS=127.0.0.1
+      - NODENAME=rabbit@localhost
+      - RABBITMQ_DEFAULT_USER=${DB_ADMIN_NAME:-root}
+      - RABBITMQ_DEFAULT_PASS=${DB_ADMIN_PASS:-password}
+      - RABBITMQ_DEFAULT_VHOST=${BASE_HOST_NAME:-$HOSTNAME}
+    ports:
+      - '5672:5672'
+      - '172.17.0.1:59043:15672'
+    volumes:
+      - /var/lib/srv/${USER}/docker/library/rabbitmq/management/rootfs/data/db/rabbitmq:/var/lib/rabbitmq
+    extra_hosts:
+      - 'rabbitmq:host-gateway'
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - rabbitmq
+
+networks:
+  rabbitmq:
+    name: rabbitmq
+    external: false
