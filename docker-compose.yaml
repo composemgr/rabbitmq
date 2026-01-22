@@ -31,7 +31,7 @@ services:
       - '5672:5672'
       - '172.17.0.1:59043:15672'
     volumes:
-      - './rootfs/db/rabbitmq:/var/lib/rabbitmq'
+      - './rootfs/data/db/rabbitmq:/var/lib/rabbitmq'
       - './rootfs/config/rabbitmq/plugins:/etc/rabbitmq/enabled_plugins'
     extra_hosts:
       - 'rabbitmq:127.0.0.1'
