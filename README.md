@@ -45,8 +45,8 @@ See `docker-compose.yaml` for complete list of configurable options.
 
 ## 📂 Volumes
 
-- `./rootfs/data/db/rabbitmq` - Data storage
-- `./rootfs/config/rabbitmq/plugins` - Data storage
+- `./volumes/data/db/rabbitmq` - Data storage
+- `./volumes/config/rabbitmq/plugins` - Data storage
 
 ## 🔍 Logging
 
