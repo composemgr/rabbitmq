@@ -26,6 +26,7 @@ services:
       RABBITMQ_DEFAULT_USER: ${DB_ADMIN_NAME:-admin}
       RABBITMQ_DEFAULT_PASS: ${DB_ADMIN_PASS:-changeme_admin_password}
       RABBITMQ_ENABLE_PLUGINS: ${RABBITMQ_ENABLE_PLUGINS:-rabbitmq_management,rabbitmq_mqtt}
+      CONTAINER_NAME: rabbitmq
     ports:
       - '1883:1883'
       - '5672:5672'
