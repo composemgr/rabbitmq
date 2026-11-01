@@ -1,0 +1,51 @@
+name: rabbitmq
+x-logging: &default-logging
+  options:
+    max-size: '5m'
+    max-file: '1'
+  driver: json-file
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq-app
+    domainname: ${BASE_DOMAIN_NAME:-example.com}
+    hostname: rabbitmq
+    restart: always
+    pull_policy: always
+    logging: *default-logging
+    environment:
+      TZ: ${TZ:-America/New_York}
+      CONTAINER_NAME: rabbitmq-app
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/}
+      RABBITMQ_DEFAULT_USER: ${DB_ADMIN_NAME:-admin}
+      RABBITMQ_DEFAULT_PASS: ${DB_ADMIN_PASS:-replace-with-a-random-password}
+    volumes:
+      - './volumes/db/rabbitmq/rabbitmq:/var/lib/rabbitmq:z'
+      - './volumes/config/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=traefik'
+      - 'traefik.http.routers.rabbitmq-rabbitmq.entrypoints=http'
+      - 'traefik.http.routers.rabbitmq-rabbitmq.rule=Host(${BASE_HOST_NAME:-$HOSTNAME})'
+      - 'traefik.http.routers.rabbitmq-rabbitmq.middlewares=rabbitmq-rabbitmq-https-redirect'
+      - 'traefik.http.middlewares.rabbitmq-rabbitmq-https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.routers.rabbitmq-rabbitmq-secure.entrypoints=https'
+      - 'traefik.http.routers.rabbitmq-rabbitmq-secure.rule=Host(${BASE_HOST_NAME:-$HOSTNAME})'
+      - 'traefik.http.routers.rabbitmq-rabbitmq-secure.tls.certresolver=cloudflare'
+      - 'traefik.http.routers.rabbitmq-rabbitmq-secure.service=rabbitmq-rabbitmq'
+      - 'traefik.http.services.rabbitmq-rabbitmq.loadbalancer.server.port=15672'
+    networks:
+      - rabbitmq
+      - traefik
+
+networks:
+  rabbitmq:
+    name: rabbitmq
+    external: false
+  traefik:
+    name: traefik
+    external: true

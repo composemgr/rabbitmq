@@ -1,0 +1,43 @@
+name: rabbitmq
+x-logging: &default-logging
+  options:
+    max-size: '5m'
+    max-file: '1'
+  driver: json-file
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq-app
+    domainname: ${BASE_DOMAIN_NAME:-example.com}
+    hostname: rabbitmq
+    restart: always
+    pull_policy: always
+    logging: *default-logging
+    environment:
+      TZ: ${TZ:-America/New_York}
+      CONTAINER_NAME: rabbitmq-app
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/}
+      RABBITMQ_DEFAULT_USER: ${DB_ADMIN_NAME:-admin}
+      RABBITMQ_DEFAULT_PASS: ${DB_ADMIN_PASS:-replace-with-a-random-password}
+    volumes:
+      - './volumes/db/rabbitmq/rabbitmq:/var/lib/rabbitmq:z'
+      - './volumes/config/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    labels:
+      - 'cloudflare.enable=true'
+      - 'cloudflare.service=http://rabbitmq-app:15672'
+      - 'cloudflare.hostname=${BASE_HOST_NAME:-$HOSTNAME}'
+    networks:
+      - rabbitmq
+      - cloudflare
+
+networks:
+  rabbitmq:
+    name: rabbitmq
+    external: false
+  cloudflare:
+    name: cloudflare
+    external: true
