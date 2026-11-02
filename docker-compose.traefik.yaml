@@ -21,6 +21,8 @@ services:
       RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/}
       RABBITMQ_DEFAULT_USER: ${DB_ADMIN_NAME:-admin}
       RABBITMQ_DEFAULT_PASS: ${DB_ADMIN_PASS:-replace-with-a-random-password}
+    ports:
+      - '5672:5672'
     volumes:
       - './volumes/db/rabbitmq/rabbitmq:/var/lib/rabbitmq:z'
       - './volumes/config/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro'
