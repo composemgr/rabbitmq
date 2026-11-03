@@ -21,6 +21,12 @@ services:
       RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/}
       RABBITMQ_DEFAULT_USER: ${DB_ADMIN_NAME:-admin}
       RABBITMQ_DEFAULT_PASS: ${DB_ADMIN_PASS:-replace-with-a-random-password}
+    healthcheck:
+      test: ['CMD', 'bash', '-c', 'exec 3<>/dev/tcp/127.0.0.1/5672']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     ports:
       - '5672:5672'
     volumes:
