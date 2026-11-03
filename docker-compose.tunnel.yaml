@@ -31,7 +31,6 @@ services:
       - '5672:5672'
     volumes:
       - './volumes/db/rabbitmq/rabbitmq:/var/lib/rabbitmq:z'
-      - './volumes/config/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     labels:

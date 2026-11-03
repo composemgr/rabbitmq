@@ -81,7 +81,6 @@ docker compose -f docker-compose.traefik.yaml --env-file .env up -d
 ## 💾 Volumes
 
 - `./volumes/db/rabbitmq/rabbitmq` - Broker data
-- `./volumes/config/rabbitmq/enabled_plugins` - Enabled plugins list
 
 The broker publishes its native `5672` and `15672` ports on the host;
 `64321` is not used for the management UI.
